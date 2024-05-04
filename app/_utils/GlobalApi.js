@@ -60,32 +60,65 @@ const getSideBanner = async () => {
 const getCourseById = async (courseId) => {
   const query =
     gql`
-    query MyQuery {
-      courseList(where: { slug: "` +
+  query MyQuery {
+    courseList(where: {slug:"` +
     courseId +
-    `" }) {
-        author
-        banner {
-          url
-        }
-        chapter {
-          ... on Chapter {
-            id
-            name
-            video {
-              url
-            }
+    `"}) {
+      author
+      banner {
+        url
+      }
+      chapter {
+        ... on Chapter {
+          id
+          name
+          video {
+            url
           }
         }
-        demoUrl
-        description
-        free
+      }
+      demoUrl
+      description
+      free
+      id
+      name
+      slug
+      sourceCode
+      tag
+      totalChapters
+    }
+  }  
+  `;
+
+  const result = await request(MASTER_URL, query);
+  return result;
+};
+
+const enrollToCourse = async (courseId, email) => {
+  const query =
+    gql`
+    mutation MyMutation {
+      createUserEnrollCourse(
+        data: {
+          courseId: "` +
+    courseId +
+    `"
+          userEmail: "` +
+    email +
+    `"
+          courseList: { connect: { slug: "` +
+    courseId +
+    `" } }
+        }
+      ) {
         id
-        name
-        slug
-        sourceCode
-        tag
-        totalChapters
+      }
+      publishManyUserEnrollCoursesConnection {
+        edges {
+          node {
+            id
+          }
+        }
       }
     }
   `;
@@ -93,8 +126,34 @@ const getCourseById = async (courseId) => {
   const result = await request(MASTER_URL, query);
   return result;
 };
+
+const checkUserEnrolledToCourse = async (courseId, email) => {
+  const query =
+    gql`
+    query MyQuery {
+      userEnrollCourses(
+        where: {
+          courseId: "` +
+    courseId +
+    `"
+          userEmail: "` +
+    email +
+    `"
+        }
+      ) {
+        id
+      }
+    }
+  `;
+
+  const result = await request(MASTER_URL, query);
+  return result;
+};
+
 export default {
   getAllCourseList,
   getSideBanner,
   getCourseById,
+  enrollToCourse,
+  checkUserEnrolledToCourse,
 };
