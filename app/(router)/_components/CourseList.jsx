@@ -1,14 +1,15 @@
-import GlobalApi from "@/app/_utils/GlobalApi";
 import React, { useEffect, useState } from "react";
+
+import CourseItem from "./CourseItem";
+import Link from "next/link";
+import GlobalApi from "../../_utils/GlobalApi";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import CourseItem from "./CourseItem";
-import Link from "next/link";
+} from "@radix-ui/react-select";
 
 const CourseList = () => {
   const [CourseList, setCourseList] = useState([]);

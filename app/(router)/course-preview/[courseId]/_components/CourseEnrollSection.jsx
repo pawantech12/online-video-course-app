@@ -1,6 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
-import GlobalApi from "@/app/_utils/GlobalApi";
+// import { Button } from "@components/ui/button";
+import { Button } from "../../../../../components/ui/button";
+import GlobalApi from "../../../../_utils/GlobalApi";
+
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -72,7 +74,7 @@ const CourseEnrollSection = ({ courseInfo, isUserAlreadyEnrolled }) => {
           <h2 className="text-white font-light">
             Continue to Learn Your Course
           </h2>
-          <Link href={"/watch-course" + isUserAlreadyEnrolled}>
+          <Link href={"/watch-course/" + isUserAlreadyEnrolled}>
             <Button className="bg-white text-primary hover:bg-white hover:text-primary">
               Continue
             </Button>

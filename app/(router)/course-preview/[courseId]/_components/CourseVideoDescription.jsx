@@ -1,15 +1,21 @@
 import React from "react";
 import VideoPlayer from "./VideoPlayer";
 import Markdown from "react-markdown";
+import { Button } from "../../../../../components/ui/button";
 
-const CourseVideoDescription = ({ courseInfo }) => {
+const CourseVideoDescription = ({
+  courseInfo,
+  activeChapterIndex,
+  watchMode = false,
+  setChapterCompleted,
+}) => {
   console.log(courseInfo?.chapter);
   if (courseInfo?.chapter && courseInfo.chapter.length > 0) {
     // Log the first chapter object
-    console.log(courseInfo.chapter[0]);
+    console.log(courseInfo.chapter[activeChapterIndex]);
 
     // Check if courseInfo.chapter[0] is an object
-    if (typeof courseInfo.chapter[0] === "object") {
+    if (typeof courseInfo.chapter[activeChapterIndex] === "object") {
       // Log the video object
       // console.log("url:", courseInfo.chapter[0].video.url);
       return (
@@ -19,14 +25,37 @@ const CourseVideoDescription = ({ courseInfo }) => {
             {courseInfo.author}
           </h2>
           <VideoPlayer
-            videoUrl={courseInfo.chapter[0].video.url}
-            poster={courseInfo.banner.url}
+            videoUrl={courseInfo.chapter[activeChapterIndex].video.url}
+            poster={!watchMode ? courseInfo.banner.url : null}
           />
-          <h2 className="mt-5 text-[17px] font-semibold">About This Course</h2>
+          <h2 className="mt-5 text-[17px] font-semibold">
+            {watchMode ? (
+              <span className="flex justify-between items-center">
+                {courseInfo.chapter[activeChapterIndex].name}
+                <Button
+                  onClick={() =>
+                    setChapterCompleted(
+                      courseInfo.chapter[activeChapterIndex].id
+                    )
+                  }
+                >
+                  Mark Completed
+                </Button>
+              </span>
+            ) : (
+              <span>About This Course</span>
+            )}
+          </h2>
           <div>
-            <Markdown className="text-[13px] font-light mt-2 leading-7">
-              {courseInfo.description}
-            </Markdown>
+            {watchMode ? (
+              <Markdown className="text-[13px] font-light mt-2 leading-7">
+                {courseInfo.chapter[activeChapterIndex].shortDesc}
+              </Markdown>
+            ) : (
+              <Markdown className="text-[13px] font-light mt-2 leading-7">
+                {courseInfo.description}
+              </Markdown>
+            )}
           </div>
         </div>
       );
